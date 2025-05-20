@@ -1,7 +1,7 @@
 ---
 name: Data issue report
-about: Create a report to help us improve
-title: ''
+about: Create a report to help us improve our data
+title: Line [###] - [Stop]
 labels: needs verification
 assignees: ''
 
