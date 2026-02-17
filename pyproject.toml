@@ -1,5 +1,5 @@
 [project]
-name = "gtfs"
+name = "lacmta-gtfs"
 version = "0.1.0"
 description = "GTFS automation for LA Metro"
 readme = "README.md"
