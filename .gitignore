@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual environment (managed by UV)
+.venv/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+
+# UV cache
+.uv/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Byte-compiled / optimized
+*.pyc
+
+# Test & coverage
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Type checking
+.mypy_cache/
+.ruff_cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
