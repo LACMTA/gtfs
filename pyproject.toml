@@ -9,4 +9,4 @@ dependencies = [
 ]
 
 [tool.poe.tasks]
-start = "python main.py"
+test = "python scripts/main.py"
