@@ -1,6 +1,6 @@
 """
 Runs the GTFS validator JAR against a GTFS feed.
-Usage: python scripts/run_validator.py --feed [bus|rail]
+Usage: python scripts/run_validator.py --feed {bus,rail} [--timeframe {current,future}]
 Reads config from pyproject.toml. Downloads the JAR automatically if missing.
 """
 
@@ -14,13 +14,14 @@ from pathlib import Path
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--feed", choices=["bus", "rail"], required=True, help="Which GTFS feed to validate")
+parser.add_argument("--timeframe", choices=["current", "future"], default="current", help="Which timeframe to validate (default: current)")
 args = parser.parse_args()
 
 PROJECT_ROOT = Path(__file__).parent.parent
 PYPROJECT = PROJECT_ROOT / "pyproject.toml"
 JAR = PROJECT_ROOT / "gtfs-validator.jar"
-INPUT = PROJECT_ROOT / "gtfs" / f"gtfs_{args.feed}.zip"
-OUTPUT = PROJECT_ROOT / "validation-output" / args.feed
+INPUT = PROJECT_ROOT / "gtfs" / args.timeframe / f"gtfs_{args.feed}.zip"
+OUTPUT = PROJECT_ROOT / "validation-output" / args.timeframe / args.feed
 
 with open(PYPROJECT, "rb") as f:
     config = tomllib.load(f)["tool"]["lacmta-gtfs"]
@@ -47,7 +48,7 @@ if not INPUT.exists():
     print(f"Error: Input file not found: {INPUT}", file=sys.stderr)
     sys.exit(1)
 
-OUTPUT.mkdir(exist_ok=True)
+OUTPUT.mkdir(parents=True, exist_ok=True)
 
 cmd = [
     "java", "-jar", str(JAR),
@@ -71,7 +72,7 @@ if errors:
     error_list = "\n".join(f"  • {e['code']} ({e['totalNotices']} occurrence(s))" for e in errors)
     print(
         f"\n{'=' * 60}\n"
-        f"GTFS VALIDATION FAILED — {len(errors)} error type(s) found in {args.feed} feed:\n"
+        f"GTFS VALIDATION FAILED — {len(errors)} error type(s) found in {args.timeframe} {args.feed} feed:\n"
         f"{error_list}\n"
         f"\nSee full report: {OUTPUT / 'report.html'}\n"
         f"{'=' * 60}",
@@ -79,4 +80,4 @@ if errors:
     )
     sys.exit(1)
 
-print(f"Validation passed for {args.feed} feed.")
+print(f"Validation passed for {args.timeframe} {args.feed} feed.")
