@@ -5,6 +5,7 @@ Reads config from pyproject.toml. Downloads the JAR automatically if missing.
 """
 
 import argparse
+import json
 import tomllib
 import subprocess
 import shutil
@@ -57,4 +58,25 @@ cmd = [
 
 print(f"Running: {' '.join(cmd)}\n")
 result = subprocess.run(cmd)
-sys.exit(result.returncode)
+
+if result.returncode != 0:
+    sys.exit(result.returncode)
+
+# Parse report.json and fail loudly if any ERROR-severity notices exist
+report_path = OUTPUT / "report.json"
+notices = json.loads(report_path.read_text()).get("notices", [])
+errors = [n for n in notices if n.get("severity") == "ERROR"]
+
+if errors:
+    error_list = "\n".join(f"  • {e['code']} ({e['totalNotices']} occurrence(s))" for e in errors)
+    print(
+        f"\n{'=' * 60}\n"
+        f"GTFS VALIDATION FAILED — {len(errors)} error type(s) found in {args.feed} feed:\n"
+        f"{error_list}\n"
+        f"\nSee full report: {OUTPUT / 'report.html'}\n"
+        f"{'=' * 60}",
+        file=sys.stderr,
+    )
+    sys.exit(1)
+
+print(f"Validation passed for {args.feed} feed.")
