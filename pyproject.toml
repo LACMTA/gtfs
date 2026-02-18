@@ -8,13 +8,30 @@ dependencies = [
     "poethepoet>=0.41.0",
     "pandas>=2.0.0",
     "python-dotenv>=1.0.0",
+    "ruff>=0.9.0",
 ]
 
 [tool.lacmta-gtfs]
 validator-jar = "https://github.com/MobilityData/gtfs-validator/releases/download/v7.1.0/gtfs-validator-7.1.0-cli.jar"
 default-country-code = "us"
 
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort (import order)
+    "UP",  # pyupgrade
+]
+
 [tool.poe.tasks]
+lint = "ruff check scripts/"
+lint-fix = "ruff check --fix scripts/"
+format = "ruff format scripts/"
+
 download-validator = "python scripts/download_validator.py"
 unzip = "python scripts/unzip_gtfs.py"
 zip = "python scripts/zip_gtfs.py"

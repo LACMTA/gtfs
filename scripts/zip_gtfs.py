@@ -1,6 +1,7 @@
 """
 Zips GTFS feeds from gtfs-unzipped/{timeframe}/{feed}/ back into gtfs/{timeframe}/{feed}.zip.
-Usage: python scripts/zip_gtfs.py [--timeframe {current,future,weekly-update}] [--service {bus,rail}]
+Usage: python scripts/zip_gtfs.py [--timeframe {current,future,weekly-update}]
+       [--service {bus,rail}]
 By default, zips all timeframes and services that exist on disk.
 """
 

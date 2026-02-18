@@ -3,9 +3,9 @@ Downloads the GTFS validator JAR defined by `validator-jar` in pyproject.toml
 and saves it as `gtfs-validator.jar` in the project root.
 """
 
+import sys
 import tomllib
 import urllib.request
-import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -18,7 +18,10 @@ with open(PYPROJECT, "rb") as f:
 try:
     url = config["tool"]["lacmta-gtfs"]["validator-jar"]
 except KeyError:
-    print("Error: `validator-jar` not found under [tool.lacmta-gtfs] in pyproject.toml", file=sys.stderr)
+    print(
+        "Error: `validator-jar` not found under [tool.lacmta-gtfs] in pyproject.toml",
+        file=sys.stderr,
+    )
     sys.exit(1)
 
 

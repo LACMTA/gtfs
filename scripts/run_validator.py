@@ -1,24 +1,35 @@
 """
 Runs the GTFS validator JAR against a GTFS feed.
-Usage: python scripts/run_validator.py [--service {bus,rail}] [--timeframe {current,future,weekly-update}]
+Usage: python scripts/run_validator.py [--service {bus,rail}]
+       [--timeframe {current,future,weekly-update}]
 By default, validates all timeframes and services for which a .zip file exists on disk.
 Reads config from pyproject.toml. Downloads the JAR automatically if missing.
 """
 
 import argparse
 import json
-import tomllib
-import subprocess
 import shutil
+import subprocess
 import sys
+import tomllib
 from pathlib import Path
 
 TIMEFRAMES = ["current", "future", "weekly-update"]
 SERVICES = ["bus", "rail"]
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--service", choices=SERVICES, default=None, help="Which GTFS feed to validate (default: all that exist on disk)")
-parser.add_argument("--timeframe", choices=TIMEFRAMES, default=None, help="Which timeframe to validate (default: all that exist on disk)")
+parser.add_argument(
+    "--service",
+    choices=SERVICES,
+    default=None,
+    help="Which GTFS feed to validate (default: all that exist on disk)",
+)
+parser.add_argument(
+    "--timeframe",
+    choices=TIMEFRAMES,
+    default=None,
+    help="Which timeframe to validate (default: all that exist on disk)",
+)
 args = parser.parse_args()
 
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -89,10 +100,13 @@ for timeframe, service in targets:
     errors = [n for n in notices if n.get("severity") == "ERROR"]
 
     if errors:
-        error_list = "\n".join(f"  • {e['code']} ({e['totalNotices']} occurrence(s))" for e in errors)
+        error_list = "\n".join(
+            f"  • {e['code']} ({e['totalNotices']} occurrence(s))" for e in errors
+        )
         print(
             f"\n{'=' * 60}\n"
-            f"GTFS VALIDATION FAILED — {len(errors)} error type(s) found in {timeframe} {service} feed:\n"
+            f"GTFS VALIDATION FAILED — {len(errors)} error type(s) found in "
+            f"{timeframe} {service} feed:\n"
             f"{error_list}\n"
             f"\nSee full report: {OUTPUT / 'report.html'}\n"
             f"{'=' * 60}",

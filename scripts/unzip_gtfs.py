@@ -1,6 +1,7 @@
 """
 Unzips GTFS feeds into gtfs-unzipped/{timeframe}/{feed}/.
-Usage: python scripts/unzip_gtfs.py [--timeframe {current,future,weekly-update}] [--service {bus,rail}]
+Usage: python scripts/unzip_gtfs.py [--timeframe {current,future,weekly-update}]
+       [--service {bus,rail}]
 By default, unzips all timeframes and services that exist on disk.
 """
 
