@@ -1,7 +1,7 @@
 """
 Unzips GTFS feeds into gtfs-unzipped/{timeframe}/{feed}/.
-Usage: python scripts/unzip_gtfs.py [--timeframe {current,future,weekly-update}]
-By default, unzips all timeframes that exist on disk.
+Usage: python scripts/unzip_gtfs.py [--timeframe {current,future,weekly-update}] [--service {bus,rail}]
+By default, unzips all timeframes and services that exist on disk.
 """
 
 import argparse
@@ -10,6 +10,7 @@ import zipfile
 from pathlib import Path
 
 TIMEFRAMES = ["current", "future", "weekly-update"]
+SERVICES = ["bus", "rail"]
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -17,6 +18,12 @@ parser.add_argument(
     choices=TIMEFRAMES,
     default=None,
     help="Which timeframe to unzip (default: all that exist on disk)",
+)
+parser.add_argument(
+    "--service",
+    choices=SERVICES,
+    default=None,
+    help="Which service to unzip (default: all services)",
 )
 args = parser.parse_args()
 
@@ -31,7 +38,12 @@ for timeframe in timeframes:
     if not src_dir.exists():
         continue
 
-    for zip_path in sorted(src_dir.glob("*.zip")):
+    zip_paths = sorted(src_dir.glob("*.zip"))
+
+    if args.service:
+        zip_paths = [p for p in zip_paths if args.service in p.stem]
+
+    for zip_path in zip_paths:
         dest = UNZIPPED_DIR / timeframe / zip_path.stem
         if dest.exists():
             shutil.rmtree(dest)

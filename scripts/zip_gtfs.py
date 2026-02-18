@@ -1,7 +1,7 @@
 """
 Zips GTFS feeds from gtfs-unzipped/{timeframe}/{feed}/ back into gtfs/{timeframe}/{feed}.zip.
-Usage: python scripts/zip_gtfs.py [--timeframe {current,future,weekly-update}]
-By default, zips all timeframes that exist on disk.
+Usage: python scripts/zip_gtfs.py [--timeframe {current,future,weekly-update}] [--service {bus,rail}]
+By default, zips all timeframes and services that exist on disk.
 """
 
 import argparse
@@ -9,6 +9,7 @@ import zipfile
 from pathlib import Path
 
 TIMEFRAMES = ["current", "future", "weekly-update"]
+SERVICES = ["bus", "rail"]
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -16,6 +17,12 @@ parser.add_argument(
     choices=TIMEFRAMES,
     default=None,
     help="Which timeframe to zip (default: all that exist on disk)",
+)
+parser.add_argument(
+    "--service",
+    choices=SERVICES,
+    default=None,
+    help="Which service to zip (default: all services)",
 )
 args = parser.parse_args()
 
@@ -30,7 +37,12 @@ for timeframe in timeframes:
     if not src_dir.exists():
         continue
 
-    for feed_dir in sorted(p for p in src_dir.iterdir() if p.is_dir()):
+    feed_dirs = sorted(p for p in src_dir.iterdir() if p.is_dir())
+
+    if args.service:
+        feed_dirs = [p for p in feed_dirs if args.service in p.name]
+
+    for feed_dir in feed_dirs:
         dest = GTFS_DIR / timeframe / f"{feed_dir.name}.zip"
         dest.parent.mkdir(parents=True, exist_ok=True)
 
