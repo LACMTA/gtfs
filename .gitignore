@@ -23,6 +23,9 @@ build/
 # Unzipped GTFS feeds
 gtfs-unzipped/
 
+# Temporary files
+temp/
+
 # Environment variables
 .env
 .env.*

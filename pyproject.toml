@@ -6,6 +6,8 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "poethepoet>=0.41.0",
+    "pandas>=2.0.0",
+    "python-dotenv>=1.0.0",
 ]
 
 [tool.lacmta-gtfs]
@@ -22,3 +24,4 @@ validate-future-bus = "python scripts/run_validator.py --feed bus --timeframe fu
 validate-future-rail = "python scripts/run_validator.py --feed rail --timeframe future"
 validate-weekly-update-bus = "python scripts/run_validator.py --feed bus --timeframe weekly-update"
 validate-weekly-update-rail = "python scripts/run_validator.py --feed rail --timeframe weekly-update"
+bus-weekly-update = "python scripts/bus_weekly_update.py"
