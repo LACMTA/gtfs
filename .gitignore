@@ -20,6 +20,9 @@ build/
 # Downloaded JAR artifacts
 *.jar
 
+# Unzipped GTFS feeds
+gtfs-unzipped/
+
 # Environment variables
 .env
 .env.*

@@ -14,8 +14,10 @@ default-country-code = "us"
 
 [tool.poe.tasks]
 download-validator = "python scripts/download_validator.py"
-validate-bus = "python scripts/run_validator.py --feed bus"
-validate-rail = "python scripts/run_validator.py --feed rail"
+unzip-gtfs = "python scripts/unzip_gtfs.py"
+zip-gtfs = "python scripts/zip_gtfs.py"
+validate-bus = "python scripts/run_validator.py --feed bus --timeframe current"
+validate-rail = "python scripts/run_validator.py --feed rail --timeframe current"
 validate-future-bus = "python scripts/run_validator.py --feed bus --timeframe future"
 validate-future-rail = "python scripts/run_validator.py --feed rail --timeframe future"
 validate-weekly-update-bus = "python scripts/run_validator.py --feed bus --timeframe weekly-update"
