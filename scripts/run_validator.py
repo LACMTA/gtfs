@@ -1,6 +1,6 @@
 """
 Runs the GTFS validator JAR against a GTFS feed.
-Usage: python scripts/run_validator.py --feed {bus,rail} [--timeframe {current,future}]
+Usage: python scripts/run_validator.py --feed {bus,rail} [--timeframe {current,future,weekly-update}]
 Reads config from pyproject.toml. Downloads the JAR automatically if missing.
 """
 
@@ -14,7 +14,7 @@ from pathlib import Path
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--feed", choices=["bus", "rail"], required=True, help="Which GTFS feed to validate")
-parser.add_argument("--timeframe", choices=["current", "future"], default="current", help="Which timeframe to validate (default: current)")
+parser.add_argument("--timeframe", choices=["current", "future", "weekly-update"], default="current", help="Which timeframe to validate (default: current)")
 args = parser.parse_args()
 
 PROJECT_ROOT = Path(__file__).parent.parent
