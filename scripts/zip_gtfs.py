@@ -39,6 +39,9 @@ for timeframe in timeframes:
         skip = {".DS_Store"}
         skip_dirs = {"__MACOSX"}
 
+        # Use a fixed timestamp so identical content produces identical zips
+        FIXED_DATE = (2020, 1, 1, 0, 0, 0)
+
         with zipfile.ZipFile(dest, "w", zipfile.ZIP_DEFLATED) as zf:
             for file_path in sorted(feed_dir.rglob("*")):
                 if not file_path.is_file():
@@ -47,6 +50,11 @@ for timeframe in timeframes:
                     continue
                 if any(part in skip_dirs for part in file_path.relative_to(feed_dir).parts):
                     continue
-                zf.write(file_path, file_path.relative_to(feed_dir))
+                info = zipfile.ZipInfo(
+                    filename=str(file_path.relative_to(feed_dir)),
+                    date_time=FIXED_DATE,
+                )
+                info.compress_type = zipfile.ZIP_DEFLATED
+                zf.writestr(info, file_path.read_bytes())
 
 print("Done.")
