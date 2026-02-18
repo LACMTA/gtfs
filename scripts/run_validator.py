@@ -1,0 +1,60 @@
+"""
+Runs the GTFS validator JAR against a GTFS feed.
+Usage: python scripts/run_validator.py --feed [bus|rail]
+Reads config from pyproject.toml. Downloads the JAR automatically if missing.
+"""
+
+import argparse
+import tomllib
+import subprocess
+import shutil
+import sys
+from pathlib import Path
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--feed", choices=["bus", "rail"], required=True, help="Which GTFS feed to validate")
+args = parser.parse_args()
+
+PROJECT_ROOT = Path(__file__).parent.parent
+PYPROJECT = PROJECT_ROOT / "pyproject.toml"
+JAR = PROJECT_ROOT / "gtfs-validator.jar"
+INPUT = PROJECT_ROOT / "gtfs" / f"gtfs_{args.feed}.zip"
+OUTPUT = PROJECT_ROOT / "validation-output" / args.feed
+
+with open(PYPROJECT, "rb") as f:
+    config = tomllib.load(f)["tool"]["lacmta-gtfs"]
+
+country_code = config.get("default-country-code", "us")
+
+if not JAR.exists():
+    print("JAR not found — downloading...")
+    subprocess.run(
+        ["python", str(PROJECT_ROOT / "scripts" / "download_validator.py")],
+        check=True,
+    )
+
+if shutil.which("java") is None:
+    print(
+        "Error: Java not found on PATH.\n"
+        "Install Java 17+ by following the instructions at:\n"
+        "https://github.com/MobilityData/gtfs-validator?tab=readme-ov-file#using-the-command-line",
+        file=sys.stderr,
+    )
+    sys.exit(1)
+
+if not INPUT.exists():
+    print(f"Error: Input file not found: {INPUT}", file=sys.stderr)
+    sys.exit(1)
+
+OUTPUT.mkdir(exist_ok=True)
+
+cmd = [
+    "java", "-jar", str(JAR),
+    "--input", str(INPUT),
+    "--output_base", str(OUTPUT),
+    "--country_code", country_code,
+]
+
+print(f"Running: {' '.join(cmd)}\n")
+result = subprocess.run(cmd)
+sys.exit(result.returncode)

@@ -15,3 +15,5 @@ default-country-code = "us"
 [tool.poe.tasks]
 test = "python scripts/main.py"
 download-validator = "python scripts/download_validator.py"
+validate-bus = "python scripts/run_validator.py --feed bus"
+validate-rail = "python scripts/run_validator.py --feed rail"
