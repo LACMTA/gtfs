@@ -17,6 +17,9 @@ build/
 # UV cache
 .uv/
 
+# Downloaded JAR artifacts
+*.jar
+
 # Environment variables
 .env
 .env.*

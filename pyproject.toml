@@ -8,5 +8,10 @@ dependencies = [
     "poethepoet>=0.41.0",
 ]
 
+[tool.lacmta-gtfs]
+validator-jar = "https://github.com/MobilityData/gtfs-validator/releases/download/v7.1.0/gtfs-validator-7.1.0-cli.jar"
+default-country-code = "us"
+
 [tool.poe.tasks]
 test = "python scripts/main.py"
+download-validator = "python scripts/download_validator.py"
