@@ -40,3 +40,7 @@ fetch-current-gitlab = "python scripts/fetch_gitlab_gtfs.py"
 bus-weekly-update = "python scripts/bus_weekly_update.py"
 manual-bus-update = "python scripts/manual_bus_update.py"
 manual-rail-pathways-import = "python scripts/manual_rail_pathways_import.py"
+revert-gtfs = [
+    { cmd = "git checkout gtfs validation-output" },
+    "unzip"
+]
