@@ -113,7 +113,7 @@ Merges GTFS pathways data (`pathways.txt`, `levels.txt`, and related stops from 
 |                     | `prompt`  | Prompt for a path to a GTFS `.zip` archive to merge pathways into     |
 
 ```bash
-uv run poe merge-rail-pathways -- --pathways-source <source> --gtfs-target <target>
+uv run poe merge-rail-pathways --pathways-source <source> --gtfs-target <target>
 ```
 
 ### `manual-rail-pathways-import`
