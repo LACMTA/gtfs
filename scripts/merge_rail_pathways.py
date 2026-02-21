@@ -8,18 +8,18 @@ merge work:
 
 Usage:
   python scripts/merge_rail_pathways.py \\
-      --pathways-source {current,provide} \\
-      --gtfs-target {current,gitlab,provide}
+      --pathways-source {current,prompt} \\
+      --gtfs-target {current,gitlab,prompt}
 
 --pathways-source
   current  Use gtfs-unzipped/current/gtfs_rail/ as the source of pathways data.
-  provide  Prompt for a path to a .zip archive of GTFS to use as the source of pathways data.
+  prompt   Prompt for a path to a .zip archive of GTFS to use as the source of pathways data.
 
 --gtfs-target
   current  Use gtfs-unzipped/current/gtfs_rail/ as the GTFS to merge pathways data into.
   gitlab   Fetch the rail GTFS zip from the GitLab URL in gtfs-meta.toml and use it as the
            GTFS to merge pathways data into.
-  provide  Prompt for a path to a .zip archive of GTFS to merge pathways data onto.
+  prompt   Prompt for a path to a .zip archive of GTFS to merge pathways data onto.
 """
 
 import argparse
@@ -56,23 +56,23 @@ GITLAB_RAIL_DIR = TEMP_DIR / "gitlab-gtfs" / "rail"
 parser = argparse.ArgumentParser(description="Merge GTFS pathways data from one feed into another.")
 parser.add_argument(
     "--pathways-source",
-    choices=["current", "provide"],
+    choices=["current", "prompt"],
     required=True,
     help=(
         "Where to get the pathways data from. "
         "'current' uses gtfs-unzipped/current/gtfs_rail/; "
-        "'provide' prompts for a GTFS .zip archive."
+        "'prompt' prompts for a GTFS .zip archive."
     ),
 )
 parser.add_argument(
     "--gtfs-target",
-    choices=["current", "gitlab", "provide"],
+    choices=["current", "gitlab", "prompt"],
     required=True,
     help=(
         "Which GTFS feed to merge the pathways onto. "
         "'current' uses gtfs-unzipped/current/gtfs_rail/; "
         "'gitlab' fetches the latest from GitLab; "
-        "'provide' prompts for a GTFS .zip archive."
+        "'prompt' prompts for a GTFS .zip archive."
     ),
 )
 args = parser.parse_args()
@@ -128,7 +128,7 @@ if args.pathways_source == "current":
     shutil.copytree(CURRENT_RAIL_DIR, PATHWAYS_SOURCE_DIR)
     print("    Done.")
 
-else:  # provide
+else:  # prompt
     zip_path = prompt_for_zip("Path to pathways GTFS .zip archive")
     print(f"\nUnzipping {zip_path.name} → {PATHWAYS_SOURCE_DIR.relative_to(PROJECT_ROOT)} ...")
     unzip_into(zip_path, PATHWAYS_SOURCE_DIR)
@@ -173,7 +173,7 @@ elif args.gtfs_target == "gitlab":
     unzip_into(gitlab_zip_path, GTFS_TARGET_DIR)
     print("    Done.")
 
-else:  # provide
+else:  # prompt
     zip_path = prompt_for_zip("Path to GTFS .zip archive to merge onto")
     print(f"\nUnzipping {zip_path.name} → {GTFS_TARGET_DIR.relative_to(PROJECT_ROOT)} ...")
     unzip_into(zip_path, GTFS_TARGET_DIR)

@@ -39,7 +39,9 @@ validate = "python scripts/run_validator.py"
 fetch-current-gitlab = "python scripts/fetch_gitlab_gtfs.py"
 bus-weekly-update = "python scripts/bus_weekly_update.py"
 manual-bus-update = "python scripts/manual_bus_update.py"
-manual-rail-pathways-import = "python scripts/manual_rail_pathways_import.py"
+merge-rail-pathways = "python scripts/merge_rail_pathways.py"
+manual-rail-pathways-import = ["merge-rail-pathways --gtfs-target current --pathways-source prompt"]
+merge-gitlab-rail = ["merge-rail-pathways --gtfs-target gitlab --pathways-source current"]
 revert-gtfs = [
     { cmd = "git checkout gtfs validation-output" },
     "unzip"
