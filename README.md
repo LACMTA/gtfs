@@ -1,4 +1,4 @@
-# gtfs
+# LA Metro GTFS
 
 GTFS automation scripts for LA Metro.
 
