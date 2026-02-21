@@ -49,8 +49,6 @@ Downloads the GTFS validator JAR file specified by `validator-jar` in `pyproject
 uv run poe download-validator
 ```
 
----
-
 ### `unzip`
 
 Unzips GTFS feed `.zip` files from `gtfs/{timeframe}/` into `gtfs-unzipped/{timeframe}/{feed}/`. By default, unzips all timeframes (`current`, `future`, `weekly-update`) and services (`bus`, `rail`) that exist on disk. Accepts optional `--timeframe` and `--service` flags to narrow the scope.
@@ -58,8 +56,6 @@ Unzips GTFS feed `.zip` files from `gtfs/{timeframe}/` into `gtfs-unzipped/{time
 ```bash
 uv run poe unzip
 ```
-
----
 
 ### `zip`
 
@@ -69,8 +65,6 @@ The inverse of `unzip`. Re-zips GTFS feeds from `gtfs-unzipped/{timeframe}/{feed
 uv run poe zip
 ```
 
----
-
 ### `validate`
 
 Runs the GTFS validator JAR against the GTFS feed `.zip` files. By default, validates all timeframes and services for which a `.zip` file exists on disk. Accepts optional `--timeframe` and `--service` flags. Automatically downloads the validator JAR if it is not already present. Outputs HTML and JSON reports to `validation-output/{timeframe}/{service}/` and exits with a non-zero status if any ERROR-severity notices are found.
@@ -79,8 +73,6 @@ Runs the GTFS validator JAR against the GTFS feed `.zip` files. By default, vali
 uv run poe validate
 ```
 
----
-
 ### `fetch-current-gitlab`
 
 Downloads the current bus and rail GTFS `.zip` files from their GitLab permalink URLs and saves them to `gtfs/current/`. By default, downloads both services. Accepts an optional `--service` flag to download only `bus` or `rail`. Note that this **does not merge pathways data from the existing rail GTFS** and isntead will just overwrite with data from GitLab. To instead fetch and merge with current pathways, use `uv run poe merge-gitlab-rail`.
@@ -88,8 +80,6 @@ Downloads the current bus and rail GTFS `.zip` files from their GitLab permalink
 ```bash
 uv run poe fetch-current-gitlab
 ```
-
----
 
 ### `bus-weekly-update`
 
@@ -100,8 +90,6 @@ Requires `FTP_HOST`, `FTP_USER`, and `FTP_PASSWORD` to be set in `.env`.
 ```bash
 uv run poe bus-weekly-update
 ```
-
----
 
 ### `manual-bus-update`
 
@@ -116,8 +104,6 @@ Unzips the new GTFS into a temporary working directory, copies over the existing
 ```bash
 uv run poe manual-bus-update
 ```
-
----
 
 ### `merge-rail-pathways`
 
@@ -135,8 +121,6 @@ Merges GTFS pathways data (`pathways.txt`, `levels.txt`, and related stops from 
 uv run poe merge-rail-pathways -- --pathways-source <source> --gtfs-target <target>
 ```
 
----
-
 ### `manual-rail-pathways-import`
 
 Use this to import a fresh set of pathways data from a local file into the current rail feed. This is a preset of `merge-rail-pathways` that uses the current rail feed as the target (`--gtfs-target current`) and prompts for the pathways source zip (`--pathways-source prompt`).
@@ -145,8 +129,6 @@ Use this to import a fresh set of pathways data from a local file into the curre
 uv run poe manual-rail-pathways-import
 ```
 
----
-
 ### `merge-gitlab-rail`
 
 Use this to apply the current pathways data onto the latest GitLab rail feed. This is a preset of `merge-rail-pathways` that fetches the latest rail GTFS from GitLab as the target (`--gtfs-target gitlab`) and uses the current rail feed as the pathways source (`--pathways-source current`).
@@ -154,8 +136,6 @@ Use this to apply the current pathways data onto the latest GitLab rail feed. Th
 ```bash
 uv run poe merge-gitlab-rail
 ```
-
----
 
 ### `revert-gtfs`
 
