@@ -126,7 +126,7 @@ uv run poe manual-rail-pathways-import
 
 ### `merge-gitlab-rail`
 
-Use this to apply the current pathways data onto the latest GitLab rail feed. This is a preset of `merge-rail-pathways` that fetches the latest rail GTFS from GitLab as the target (`--gtfs-target gitlab`) and uses the current rail feed as the pathways source (`--pathways-source current`).
+Use this update the current rail GTFS from GitLab while retaining pathways data in this repo. This is a preset of `merge-rail-pathways` that fetches the latest rail GTFS from GitLab as the target (`--gtfs-target gitlab`) and uses the current rail feed as the pathways source (`--pathways-source current`).
 
 ```bash
 uv run poe merge-gitlab-rail
