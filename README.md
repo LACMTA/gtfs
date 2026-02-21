@@ -29,17 +29,12 @@ Some scripts require FTP credentials. Copy `.env.example` to `.env` and fill in 
 cp .env.example .env
 ```
 
-| Variable       | Description  |
-| -------------- | ------------ |
-| `FTP_HOST`     | FTP server   |
-| `FTP_USER`     | FTP username |
-| `FTP_PASSWORD` | FTP password |
-
----
-
 ## Scripts
 
-All scripts are run via `uv run poe <task>`.
+- All scripts are run via `uv run poe <task>`.
+- All scripts work from and update **unzipped** GTFS files, which are not checked into the repo due to size.
+- Start by running `uv run poe unzip`, which will unzip all files into `gtfs-unzipped`, which is ignored by git.
+- Remember to run `uv run poe zip` before committing, only the zipped archives are watched by git.
 
 ### `download-validator`
 
