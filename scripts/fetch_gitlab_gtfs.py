@@ -9,19 +9,22 @@ By default, downloads both bus and rail.
 """
 
 import argparse
+import tomllib
 import urllib.request
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
-# Configuration – fill in the GitLab permalink for each service
+# Configuration – read GitLab permalinks from gtfs-meta.toml
 # ---------------------------------------------------------------------------
 
-GITLAB_URLS = {
-    "bus": "https://gitlab.com/LACMTA/gtfs_bus/-/raw/master/gtfs_bus.zip?ref_type=heads&inline=false",
-    "rail": "https://gitlab.com/LACMTA/gtfs_rail/-/raw/master/gtfs_rail.zip?ref_type=heads&inline=false",
-}
+PROJECT_ROOT = Path(__file__).parent.parent
+META_PATH = PROJECT_ROOT / "gtfs-meta.toml"
 
-SERVICES = ["bus", "rail"]
+with META_PATH.open("rb") as f:
+    _meta = tomllib.load(f)
+
+GITLAB_URLS: dict[str, str] = _meta["gitlab"]
+SERVICES = list(GITLAB_URLS.keys())
 
 # ---------------------------------------------------------------------------
 # Argument parsing
@@ -44,7 +47,6 @@ services = [args.service] if args.service else SERVICES
 # Download
 # ---------------------------------------------------------------------------
 
-PROJECT_ROOT = Path(__file__).parent.parent
 CURRENT_DIR = PROJECT_ROOT / "gtfs" / "current"
 CURRENT_DIR.mkdir(parents=True, exist_ok=True)
 
