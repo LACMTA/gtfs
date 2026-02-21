@@ -17,7 +17,8 @@ Usage:
 
 --gtfs-target
   current  Use gtfs-unzipped/current/gtfs_rail/ as the GTFS to merge pathways data into.
-  gitlab   Fetch the rail GTFS zip from the GitLab URL in gtfs-meta.toml and use it as the GTFS to merge pathways data into.
+  gitlab   Fetch the rail GTFS zip from the GitLab URL in gtfs-meta.toml and use it as the
+           GTFS to merge pathways data into.
   provide  Prompt for a path to a .zip archive of GTFS to merge pathways data onto.
 """
 
@@ -52,9 +53,7 @@ GITLAB_RAIL_DIR = TEMP_DIR / "gitlab-gtfs" / "rail"
 # Argument parsing
 # ---------------------------------------------------------------------------
 
-parser = argparse.ArgumentParser(
-    description="Merge GTFS pathways data from one feed into another."
-)
+parser = argparse.ArgumentParser(description="Merge GTFS pathways data from one feed into another.")
 parser.add_argument(
     "--pathways-source",
     choices=["current", "provide"],
@@ -131,10 +130,7 @@ if args.pathways_source == "current":
 
 else:  # provide
     zip_path = prompt_for_zip("Path to pathways GTFS .zip archive")
-    print(
-        f"\nUnzipping {zip_path.name}"
-        f" → {PATHWAYS_SOURCE_DIR.relative_to(PROJECT_ROOT)} ..."
-    )
+    print(f"\nUnzipping {zip_path.name} → {PATHWAYS_SOURCE_DIR.relative_to(PROJECT_ROOT)} ...")
     unzip_into(zip_path, PATHWAYS_SOURCE_DIR)
     print("    Done.")
 
@@ -179,10 +175,7 @@ elif args.gtfs_target == "gitlab":
 
 else:  # provide
     zip_path = prompt_for_zip("Path to GTFS .zip archive to merge onto")
-    print(
-        f"\nUnzipping {zip_path.name}"
-        f" → {GTFS_TARGET_DIR.relative_to(PROJECT_ROOT)} ..."
-    )
+    print(f"\nUnzipping {zip_path.name} → {GTFS_TARGET_DIR.relative_to(PROJECT_ROOT)} ...")
     unzip_into(zip_path, GTFS_TARGET_DIR)
     print("    Done.")
 
@@ -210,22 +203,18 @@ stops_df = pd.read_csv(PATHWAYS_SOURCE_DIR / "stops.txt", dtype=str).fillna("")
 # At each iteration, add any stop whose parent_station is already in the set.
 in_scope: set[str] = set(INCLUDED_STOPS)
 while True:
-    children = set(
-        stops_df.loc[
-            stops_df["parent_station"].isin(in_scope), "stop_id"
-        ]
-    )
+    children = set(stops_df.loc[stops_df["parent_station"].isin(in_scope), "stop_id"])
     new = children - in_scope
     if not new:
         break
     in_scope.update(new)
 
-scoped_stops = stops_df[
-    stops_df["stop_id"].isin(in_scope)
-].reset_index(drop=True)
+scoped_stops = stops_df[stops_df["stop_id"].isin(in_scope)].reset_index(drop=True)
 
 print(f"\nFound {len(scoped_stops)} stops in scope:\n")
-print(scoped_stops[["stop_id", "stop_name", "location_type", "parent_station"]].to_string(index=False))
+print(
+    scoped_stops[["stop_id", "stop_name", "location_type", "parent_station"]].to_string(index=False)
+)
 
 # ---------------------------------------------------------------------------
 # Step 4: Identify pathways to carry over from the pathways source
@@ -242,12 +231,15 @@ else:
     pathways_df = pd.read_csv(pathways_path, dtype=str).fillna("")
 
     scoped_pathways = pathways_df[
-        pathways_df["from_stop_id"].isin(in_scope)
-        & pathways_df["to_stop_id"].isin(in_scope)
+        pathways_df["from_stop_id"].isin(in_scope) & pathways_df["to_stop_id"].isin(in_scope)
     ].reset_index(drop=True)
 
     print(f"Found {len(scoped_pathways)} pathways in scope (out of {len(pathways_df)} total):\n")
-    print(scoped_pathways[["pathway_id", "from_stop_id", "to_stop_id", "pathway_mode", "is_bidirectional"]].to_string(index=False))
+    print(
+        scoped_pathways[
+            ["pathway_id", "from_stop_id", "to_stop_id", "pathway_mode", "is_bidirectional"]
+        ].to_string(index=False)
+    )
 
 # ---------------------------------------------------------------------------
 # Step 5: Identify levels to carry over from the pathways source
@@ -264,13 +256,9 @@ else:
     levels_df = pd.read_csv(levels_path, dtype=str).fillna("")
 
     # Collect the level_ids referenced by our in-scope stops
-    scoped_level_ids = set(
-        scoped_stops["level_id"].dropna().unique()
-    ) - {""}
+    scoped_level_ids = set(scoped_stops["level_id"].dropna().unique()) - {""}
 
-    scoped_levels = levels_df[
-        levels_df["level_id"].isin(scoped_level_ids)
-    ].reset_index(drop=True)
+    scoped_levels = levels_df[levels_df["level_id"].isin(scoped_level_ids)].reset_index(drop=True)
 
     print(f"Found {len(scoped_levels)} levels in scope (out of {len(levels_df)} total):\n")
     print(scoped_levels.to_string(index=False))
@@ -311,7 +299,10 @@ if not new_stops.empty:
 
 target_stops_df = target_stops_df.reset_index()
 target_stops_df.to_csv(target_stops_path, index=False)
-print(f"stops.txt    – updated {len(scoped_stops_aligned)} rows, wrote {len(target_stops_df)} total rows.")
+print(
+    f"stops.txt    – updated {len(scoped_stops_aligned)} rows, "
+    f"wrote {len(target_stops_df)} total rows."
+)
 
 # --- pathways.txt ---
 
@@ -320,7 +311,9 @@ if scoped_pathways is not None:
     scoped_pathways.to_csv(pathways_out_path, index=False)
     print(f"pathways.txt – wrote {len(scoped_pathways)} rows.")
 else:
-    print("WARNING: No pathways data found in pathways source. Are you sure you provided the right file?")
+    print(
+        """WARNING: No pathways data found in pathways source. Are you sure you provided the right file?"""
+    )  # noqa: E501
 
 # --- levels.txt ---
 
