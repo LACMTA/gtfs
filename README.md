@@ -1,5 +1,8 @@
 # LA Metro GTFS
 
+> [!WARNING]  
+> This is work in progress and the data in this repo may not be up-to-date or properly validated. Current GTFS can be found in these repos: [bus](https://gitlab.com/LACMTA/gtfs_bus), [rail](https://gitlab.com/LACMTA/gtfs_rail).
+
 GTFS automation scripts for LA Metro.
 
 ## Getting started
